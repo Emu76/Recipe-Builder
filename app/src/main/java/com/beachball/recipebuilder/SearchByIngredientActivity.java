@@ -35,7 +35,7 @@ public class SearchByIngredientActivity extends BaseNavActivity implements Searc
         hideKeyboard();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoadingFragment()).addToBackStack(LOADING_BACK_STACK).commit();
         RecipeInterface apiService = retrofit.create(RecipeInterface.class);
-        Call<RecipeResult[]> call = apiService.getByIngredients(MS_KEY, ingredientStr, 10, 1);
+        Call<RecipeResult[]> call = apiService.getByIngredients(msKey, ingredientStr, 10, 1);
         call.enqueue(new Callback<RecipeResult[]>() {
             @Override
             public void onResponse(Call<RecipeResult[]> call, Response<RecipeResult[]> response) {
@@ -55,7 +55,7 @@ public class SearchByIngredientActivity extends BaseNavActivity implements Searc
     public void onResultSelected(String id) {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoadingFragment()).addToBackStack(LOADING_BACK_STACK).commit();
         RecipeInterface apiService = retrofit.create(RecipeInterface.class);
-        Call<RecipeInstructions> call = apiService.getById(id, MS_KEY);
+        Call<RecipeInstructions> call = apiService.getById(id, msKey);
         call.enqueue(new Callback<RecipeInstructions>() {
             @Override
             public void onResponse(Call<RecipeInstructions> call, Response<RecipeInstructions> response) {

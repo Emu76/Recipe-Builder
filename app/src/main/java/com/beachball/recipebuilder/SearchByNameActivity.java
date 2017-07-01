@@ -35,9 +35,9 @@ public class SearchByNameActivity extends BaseNavActivity implements SearchByNam
         String dietStr = (isVegetarian ? getString(R.string.vegetarian):"") + (isVegan ? getString(R.string.vegan):"");
         Call<RecipeResult[]> call;
         if (dietStr.equals("")) {
-            call = apiService.getByName(MS_KEY, ingredientStr);
+            call = apiService.getByName(msKey, ingredientStr);
         } else {
-            call = apiService.getByName(MS_KEY, ingredientStr, dietStr);
+            call = apiService.getByName(msKey, ingredientStr, dietStr);
         }
         call.enqueue(new Callback<RecipeResult[]>() {
             @Override

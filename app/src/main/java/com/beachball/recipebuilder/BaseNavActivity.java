@@ -26,10 +26,15 @@ public class BaseNavActivity extends AppCompatActivity {
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
     Intent pendingIntent;
+    public native String getNativeKey();
 
     protected static final String LOADING_BACK_STACK = "loading";
     protected static final String BASE_URL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/";
-    protected static final String MS_KEY = "6fERY4byRHmshUoYEG3HfCXTXgY4p1PJ6uWjsnXS4uqUb1z6A0";
+    protected String msKey;
+
+    static {
+        System.loadLibrary("keys");
+    }
 
     protected Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -40,6 +45,8 @@ public class BaseNavActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_nav);
+
+        msKey = getNativeKey();
 
         String[] navTitles = {getString(R.string.search_by_ingredient),getString(R.string.search_by_name),getString(R.string.favourite_searches),getString(R.string.saved_recipes)};
         int[] drawableTitles = {R.drawable.ic_action_search, R.drawable.ic_action_search, R.drawable.ic_action_favorite, R.drawable.ic_action_save};
