@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView android:id="@+id/search_name_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorBlack"
+        android:fontFamily="sans-serif-light"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="4dp"
+        android:textSize="22sp"
+        android:text="Search by name"/>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/search_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/search_name_title">
+        <EditText android:id="@+id/recipe_search_edt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Search for a recipe..."
+            android:inputType="textAutoCorrect"
+            android:imeOptions="actionDone"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <CheckBox android:id="@+id/vegetarian_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@id/search_input_layout"
+        android:text="Vegetarian?"/>
+
+    <CheckBox android:id="@+id/vegan_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@id/vegetarian_check"
+        android:text="Vegan?"/>
+
+    <Button
+        android:id="@+id/go_name_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:clickable="true"
+        android:text="GO!"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/ripple_button"/>
+
+</RelativeLayout>
