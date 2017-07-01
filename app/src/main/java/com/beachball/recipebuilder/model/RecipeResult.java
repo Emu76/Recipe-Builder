@@ -5,11 +5,11 @@ package com.beachball.recipebuilder.model;
  */
 
 
-    import android.os.Parcel;
-    import android.os.Parcelable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-    import com.google.gson.annotations.Expose;
-    import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class RecipeResult implements Parcelable {
     private int mData;

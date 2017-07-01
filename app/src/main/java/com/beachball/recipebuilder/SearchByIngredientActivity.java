@@ -2,10 +2,6 @@ package com.beachball.recipebuilder;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.beachball.recipebuilder.fragment.LoadingFragment;
 import com.beachball.recipebuilder.fragment.RecipeFragment;
@@ -18,18 +14,10 @@ import com.beachball.recipebuilder.model.RecipeResult;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SearchByIngredientActivity extends BaseNavActivity implements SearchIngredientListFragment.OnIngredientEnteredListener,
     ResultsFragment.OnResultSelectedListener {
 
-    public static final String BASE_URL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/";
-    public static final String MS_KEY = "0lcJvnUTk2mshDVtruSuWf0hIBA2p1XyA4mjsnwhEeWAtgAwGY";
-    private Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
     Fragment searchIngListFragment;
 
     @Override
@@ -44,7 +32,8 @@ public class SearchByIngredientActivity extends BaseNavActivity implements Searc
 
     @Override
     public void onIngredientEntered(String ingredientStr) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoadingFragment()).commit();
+        hideKeyboard();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoadingFragment()).addToBackStack(LOADING_BACK_STACK).commit();
         RecipeInterface apiService = retrofit.create(RecipeInterface.class);
         Call<RecipeResult[]> call = apiService.getByIngredients(MS_KEY, ingredientStr, 10, 1);
         call.enqueue(new Callback<RecipeResult[]>() {
@@ -57,13 +46,14 @@ public class SearchByIngredientActivity extends BaseNavActivity implements Searc
 
             @Override
             public void onFailure(Call<RecipeResult[]> call, Throwable t) {
-                Log.e("RecipeBuilder", t.toString());
+                onConnectionFailed(t.toString());
             }
         });
     }
 
     @Override
     public void onResultSelected(String id) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoadingFragment()).addToBackStack(LOADING_BACK_STACK).commit();
         RecipeInterface apiService = retrofit.create(RecipeInterface.class);
         Call<RecipeInstructions> call = apiService.getById(id, MS_KEY);
         call.enqueue(new Callback<RecipeInstructions>() {
@@ -76,7 +66,7 @@ public class SearchByIngredientActivity extends BaseNavActivity implements Searc
 
             @Override
             public void onFailure(Call<RecipeInstructions> call, Throwable t) {
-                Log.e("RecipeBuilder", t.toString());
+                onConnectionFailed(t.toString());
             }
         });
     }

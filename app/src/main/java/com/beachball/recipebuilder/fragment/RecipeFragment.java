@@ -53,21 +53,36 @@ public class RecipeFragment extends Fragment {
         ImageView imageView = (ImageView)fragmentView.findViewById(R.id.recipe_instructions_image);
         Picasso.with(getContext()).load(results.getImage()).into(imageView);
         TextView vegetarian = (TextView)fragmentView.findViewById(R.id.vegetarian_suitable);
-        vegetarian.setText("Suitable for vegetarians? " + (results.getVegetarian() ? "Yes" : "No"));
+        vegetarian.setText(getString(R.string.suitable_vegetarians) + " " + (results.getVegetarian() ? getString(R.string.yes) : getString(R.string.no)));
         TextView vegan = (TextView)fragmentView.findViewById(R.id.vegan_suitable);
-        vegan.setText("Suitable for vegans? " + (results.getVegan() ? "Yes" : "No"));
+        vegan.setText(getString(R.string.suitable_vegans) + " " + (results.getVegan() ? getString(R.string.yes) : getString(R.string.no)));
         TextView servings = (TextView)fragmentView.findViewById(R.id.servings_count);
-        servings.setText("Servings: " + Integer.toString(results.getServings()));
+        servings.setText(getString(R.string.servings) + " " + Integer.toString(results.getServings()));
         TextView readyIn = (TextView)fragmentView.findViewById(R.id.ready_in);
-        readyIn.setText("Ready in: " + Integer.toString(results.getReadyInMinutes()) + " minutes");
+        readyIn.setText(getString(R.string.ready_in) + " " + Integer.toString(results.getReadyInMinutes()) + " " + getString(R.string.minutes));
         TextView instructions = (TextView)fragmentView.findViewById(R.id.recipe_instructions_text);
         instructions.setText(results.getInstructions());
 
         mRecyclerView = (RecyclerView) fragmentView.findViewById(R.id.recipe_ingredients_list);
         setupRecyclerView(results.getExtendedIngredients());
 
+        //saveToRealm((RecipeInstructions)getArguments().get(ARG_RECIPE));
+
         return fragmentView;
     }
+
+    /*private void saveToRealm(final RecipeInstructions instructions) {
+        int id = instructions.getId();
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyToRealm(instructions);
+            }
+        });
+        RecipeInstructions instructions = realm.where(RecipeInstructions.class).equalTo("id", id).findFirst();
+        instructions.getInstructions();
+    }*/
 
     private void setupRecyclerView(List<ExtendedIngredient> dataSet) {
         mLayoutManager = new LinearLayoutManager(getActivity());

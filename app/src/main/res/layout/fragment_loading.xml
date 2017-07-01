@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"/>
 
-    <TextView
+    <TextView android:id="@+id/loading_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/loading_circle"
@@ -16,7 +16,6 @@
         android:gravity="center_horizontal"
         android:textColor="@color/colorBlack"
         android:fontFamily="sans-serif-light"
-        android:textSize="22sp"
-        android:text="Tossing pancakes..."/>
+        android:textSize="22sp"/>
 
 </RelativeLayout>

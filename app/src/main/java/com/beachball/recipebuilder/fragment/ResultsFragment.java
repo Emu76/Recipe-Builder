@@ -8,9 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.beachball.recipebuilder.IngredientAdapter;
 import com.beachball.recipebuilder.R;
 import com.beachball.recipebuilder.ResultsAdapter;
 import com.beachball.recipebuilder.model.RecipeResult;

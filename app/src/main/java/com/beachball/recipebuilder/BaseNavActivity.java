@@ -1,17 +1,24 @@
 package com.beachball.recipebuilder;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BaseNavActivity extends AppCompatActivity {
 
@@ -20,12 +27,21 @@ public class BaseNavActivity extends AppCompatActivity {
     private ActionBarDrawerToggle drawerToggle;
     Intent pendingIntent;
 
+    protected static final String LOADING_BACK_STACK = "loading";
+    protected static final String BASE_URL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/";
+    protected static final String MS_KEY = "6fERY4byRHmshUoYEG3HfCXTXgY4p1PJ6uWjsnXS4uqUb1z6A0";
+
+    protected Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_nav);
 
-        String[] navTitles = {"Search by ingredients","Search by name","Favourite searches","Saved recipes"};
+        String[] navTitles = {getString(R.string.search_by_ingredient),getString(R.string.search_by_name),getString(R.string.favourite_searches),getString(R.string.saved_recipes)};
         int[] drawableTitles = {R.drawable.ic_action_search, R.drawable.ic_action_search, R.drawable.ic_action_favorite, R.drawable.ic_action_save};
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -34,7 +50,15 @@ public class BaseNavActivity extends AppCompatActivity {
         drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(BaseNavActivity.this, "ok", Toast.LENGTH_LONG).show();
+                if(position == 0) {
+                    pendingIntent = new Intent(BaseNavActivity.this, SearchByIngredientActivity.class);
+                } else if(position == 1) {
+                    pendingIntent = new Intent(BaseNavActivity.this, SearchByNameActivity.class);
+                } else if(position == 2) {
+
+                } else if(position == 3) {
+
+                }
                 drawerLayout.closeDrawers();
             }
         });
@@ -56,7 +80,6 @@ public class BaseNavActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
         drawerToggle.syncState();
     }
 
@@ -71,6 +94,20 @@ public class BaseNavActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    protected void onConnectionFailed(String error) {
+        getSupportFragmentManager().popBackStack(LOADING_BACK_STACK, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        Toast.makeText(BaseNavActivity.this, R.string.failed_connect_string, Toast.LENGTH_LONG).show();
+        Log.e("RecipeBuilder", error);
+    }
+
+    protected void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
 }

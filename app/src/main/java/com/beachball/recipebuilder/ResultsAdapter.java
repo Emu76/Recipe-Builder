@@ -1,24 +1,16 @@
 package com.beachball.recipebuilder;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.beachball.recipebuilder.model.RecipeResult;
 import com.squareup.picasso.Picasso;
-
-import java.io.InputStream;
-import java.net.URL;
-import java.util.List;
 
 /**
  * Created by Peter Emo on 26/06/2017.
@@ -103,12 +95,12 @@ public class ResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             Picasso.with(mContext).load(mDataset[newPosition].getImage()).into(item.recipeImage);
             String likeStr = "";
             if (mDataset[newPosition].getLikes() == 1) {
-                likeStr = " like";
+                likeStr = " " + mContext.getString(R.string.like_single);
             } else {
-                likeStr = " likes";
+                likeStr = " " + mContext.getString(R.string.like_multiple);
             }
             item.recipeLikes.setText(Integer.toString(mDataset[newPosition].getLikes()) + likeStr);
-            item.recipeIngredientCount.setText("Ingredients available: " + mDataset[newPosition].getUsedIngredientCount());
+            item.recipeIngredientCount.setText(mContext.getString(R.string.ingredients_available) + ": " + mDataset[newPosition].getUsedIngredientCount());
         }
     }
 

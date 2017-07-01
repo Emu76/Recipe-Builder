@@ -12,7 +12,7 @@
             android:id="@+id/ingredients_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter an ingredient..."
+            android:hint="@string/hint_ingredient"
             android:inputType="textAutoCorrect"
             android:imeOptions="actionDone"/>
     </android.support.design.widget.TextInputLayout>

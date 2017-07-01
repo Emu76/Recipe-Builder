@@ -11,4 +11,40 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_drawer_test">DrawerTestActivity</string>
     <string name="title_activity_base_nav">BaseNavActivity</string>
+
+    <string name="go">GO!</string>
+    <string name="vegetarian">vegetarian</string>
+    <string name="vegetarian_q">Vegetarian?</string>
+    <string name="vegan">vegan</string>
+    <string name="vegan_q">Vegan?</string>
+    <string name="search_by_name">Search by name</string>
+    <string name="search_by_ingredient">Search by ingredients</string>
+    <string name="favourite_searches">Favourite searches</string>
+    <string name="saved_recipes">Saved recipes</string>
+    <string name="top_ten_results">Top 10 results</string>
+    <string name="failed_connect_string">Failed to connect to API!</string>
+    <string name="ingredients_available">Ingredients available</string>
+    <string name="suitable_vegetarians">Suitable for vegetarians?</string>
+    <string name="suitable_vegans">Suitable for vegans?</string>
+    <string name="servings">Servings:</string>
+    <string name="ready_in">Ready in:</string>
+    <string name="minutes">minutes</string>
+
+    <string name="like_single">like</string>
+    <string name="like_multiple">likes</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="hint_recipe">Search for a recipe...</string>
+    <string name="hint_ingredient">Enter an ingredient...</string>
+
+    <string-array name="loading_str_array">
+        <item>Tossing pancakes...</item>
+        <item>Flipping burgers...</item>
+        <item>Boiling pasta...</item>
+        <item>Toasting teacakes...</item>
+        <item>Frying eggs...</item>
+        <item>Glazing cherries...</item>
+        <item>Mashing potato...</item>
+    </string-array>
 </resources>
