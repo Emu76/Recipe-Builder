@@ -11,8 +11,14 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class RecipeResult implements Parcelable {
+import io.realm.RealmObject;
+
+public class RecipeResult extends RealmObject implements Parcelable {
     private int mData;
+
+    public RecipeResult() {
+
+    }
 
     @SerializedName("id")
     @Expose

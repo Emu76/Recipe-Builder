@@ -1,6 +1,7 @@
 package com.beachball.recipebuilder.interfaces;
 
 import com.beachball.recipebuilder.model.RecipeInstructions;
+import com.beachball.recipebuilder.model.RecipeNameReturn;
 import com.beachball.recipebuilder.model.RecipeResult;
 
 import retrofit2.Call;
@@ -17,11 +18,11 @@ public interface RecipeInterface {
     // Callback for the parsed response is the last parameter
 
     @GET("recipes/search")
-    Call<RecipeResult[]> getByName(@Query("mashape-key") String msKey, @Query("query")
+    Call<RecipeNameReturn> getByName(@Query("mashape-key") String msKey, @Query("query")
             String name, @Query("diet") String diet);
 
     @GET("recipes/search")
-    Call<RecipeResult[]> getByName(@Query("mashape-key") String msKey, @Query("query")
+    Call<RecipeNameReturn> getByName(@Query("mashape-key") String msKey, @Query("query")
             String name);
 
     @GET("recipes/findByIngredients?fillIngredients=false&limitLicense=false")

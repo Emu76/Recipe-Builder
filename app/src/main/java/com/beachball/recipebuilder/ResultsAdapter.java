@@ -5,8 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.beachball.recipebuilder.model.RecipeResult;
@@ -22,11 +24,13 @@ public class ResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static int TYPE_HEADER = 0;
     private static int TYPE_ITEM = 1;
 
-    private OnItemClickListener mListener;
+    private ResultsAdapterListener mListener;
 
     public static class ViewHeader extends RecyclerView.ViewHolder {
-        public ViewHeader(LinearLayout v) {
+        public ImageButton favouriteButton;
+        public ViewHeader(RelativeLayout v) {
             super(v);
+            favouriteButton = (ImageButton)v.findViewById(R.id.favourite_results);
         }
     }
 
@@ -46,8 +50,8 @@ public class ResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    public ResultsAdapter(RecipeResult[] dataset, Context context, OnItemClickListener listener) {
-        mDataset = dataset;
+    public ResultsAdapter(RecipeResult[] dataSet, Context context, ResultsAdapterListener listener) {
+        mDataset = dataSet;
         mContext = context;
         mListener = listener;
     }
@@ -55,7 +59,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if(viewType == 0) {
-            LinearLayout v = (LinearLayout) LayoutInflater.from(parent.getContext())
+            RelativeLayout v = (RelativeLayout) LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.layout_results_header, parent, false);
             return new ViewHeader(v);
         } else if(viewType == 1) {
@@ -94,18 +98,26 @@ public class ResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             item.recipeTitle.setText(mDataset[newPosition].getTitle());
             Picasso.with(mContext).load(mDataset[newPosition].getImage()).into(item.recipeImage);
             String likeStr = "";
-            if (mDataset[newPosition].getLikes() == 1) {
-                likeStr = " " + mContext.getString(R.string.like_single);
-            } else {
-                likeStr = " " + mContext.getString(R.string.like_multiple);
+            if(mDataset[newPosition].getLikes() != null) {
+                if (mDataset[newPosition].getLikes() == 1) {
+                    likeStr = " " + mContext.getString(R.string.like_single);
+                } else {
+                    likeStr = " " + mContext.getString(R.string.like_multiple);
+                }
+                item.recipeLikes.setText(Integer.toString(mDataset[newPosition].getLikes()) + likeStr);
             }
-            item.recipeLikes.setText(Integer.toString(mDataset[newPosition].getLikes()) + likeStr);
-            item.recipeIngredientCount.setText(mContext.getString(R.string.ingredients_available) + ": " + mDataset[newPosition].getUsedIngredientCount());
+            if(mDataset[newPosition].getUsedIngredientCount() != null) {
+                item.recipeIngredientCount.setText(mContext.getString(R.string.ingredients_available) + ": " + mDataset[newPosition].getUsedIngredientCount());
+            }
+        } else if(holder instanceof ViewHeader) {
+            ViewHeader header = (ViewHeader) holder;
+            mListener.returnFavouriteButton(header.favouriteButton);
         }
     }
 
-    public interface OnItemClickListener {
+    public interface ResultsAdapterListener {
         void onItemClick(int id);
+        void returnFavouriteButton(ImageButton button);
     }
 
     @Override

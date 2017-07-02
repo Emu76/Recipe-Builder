@@ -29,11 +29,15 @@
     <string name="servings">Servings:</string>
     <string name="ready_in">Ready in:</string>
     <string name="minutes">minutes</string>
+    <string name="search_already_saved">Search has already been favourited!</string>
 
     <string name="like_single">like</string>
     <string name="like_multiple">likes</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="save">Save</string>
+    <string name="search_name">Please enter a name for this search</string>
+    <string name="name">Name</string>
 
     <string name="hint_recipe">Search for a recipe...</string>
     <string name="hint_ingredient">Enter an ingredient...</string>

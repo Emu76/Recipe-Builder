@@ -7,13 +7,14 @@ import com.beachball.recipebuilder.fragment.LoadingFragment;
 import com.beachball.recipebuilder.fragment.ResultsFragment;
 import com.beachball.recipebuilder.fragment.SearchByNameFragment;
 import com.beachball.recipebuilder.interfaces.RecipeInterface;
+import com.beachball.recipebuilder.model.RecipeNameReturn;
 import com.beachball.recipebuilder.model.RecipeResult;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SearchByNameActivity extends BaseNavActivity implements SearchByNameFragment.OnSearchByNameListener {
+public class SearchByNameActivity extends BaseNavActivity implements SearchByNameFragment.OnSearchByNameListener, ResultsFragment.OnResultSelectedListener {
 
     Fragment searchByNameFragment;
 
@@ -33,24 +34,29 @@ public class SearchByNameActivity extends BaseNavActivity implements SearchByNam
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoadingFragment()).addToBackStack(LOADING_BACK_STACK).commit();
         RecipeInterface apiService = retrofit.create(RecipeInterface.class);
         String dietStr = (isVegetarian ? getString(R.string.vegetarian):"") + (isVegan ? getString(R.string.vegan):"");
-        Call<RecipeResult[]> call;
+        Call<RecipeNameReturn> call;
         if (dietStr.equals("")) {
             call = apiService.getByName(msKey, ingredientStr);
         } else {
             call = apiService.getByName(msKey, ingredientStr, dietStr);
         }
-        call.enqueue(new Callback<RecipeResult[]>() {
+        call.enqueue(new Callback<RecipeNameReturn>() {
             @Override
-            public void onResponse(Call<RecipeResult[]> call, Response<RecipeResult[]> response) {
-                RecipeResult[] result = response.body();
+            public void onResponse(Call<RecipeNameReturn> call, Response<RecipeNameReturn> response) {
+                RecipeNameReturn result = response.body();
                 ResultsFragment resultsFragment = ResultsFragment.newInstance(result);
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, resultsFragment).commit();
             }
 
             @Override
-            public void onFailure(Call<RecipeResult[]> call, Throwable t) {
+            public void onFailure(Call<RecipeNameReturn> call, Throwable t) {
                 onConnectionFailed(t.toString());
             }
         });
+    }
+
+    @Override
+    public void onResultSelected(String id) {
+
     }
 }
