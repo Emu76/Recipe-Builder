@@ -62,7 +62,7 @@ public class BaseNavActivity extends AppCompatActivity {
                 } else if(position == 1) {
                     pendingIntent = new Intent(BaseNavActivity.this, SearchByNameActivity.class);
                 } else if(position == 2) {
-
+                    pendingIntent = new Intent(BaseNavActivity.this, FavouriteSearchActivity.class);
                 } else if(position == 3) {
 
                 }

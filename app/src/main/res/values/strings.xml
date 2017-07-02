@@ -11,6 +11,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_drawer_test">DrawerTestActivity</string>
     <string name="title_activity_base_nav">BaseNavActivity</string>
+    <string name="title_activity_favourite_search">FavouriteSearchActivity</string>
 
     <string name="go">GO!</string>
     <string name="vegetarian">vegetarian</string>
