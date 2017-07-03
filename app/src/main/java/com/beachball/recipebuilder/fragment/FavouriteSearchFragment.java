@@ -59,8 +59,8 @@ public class FavouriteSearchFragment extends Fragment {
     }
 
     public interface FavouriteSearchListener {
-        void onDeleteEntry();
-        void onClickEntry();
+        void onDeleteEntry(RecipeResultRealmModel model);
+        void onClickEntry(RecipeResultRealmModel model);
     }
 
     private void setupRecyclerView(RealmResults<RecipeResultRealmModel> list) {
@@ -68,13 +68,13 @@ public class FavouriteSearchFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new FavouriteSearchAdapter(list, new FavouriteSearchAdapter.FavouriteSearchAdapterListener() {
             @Override
-            public void onDeleteEntry() {
-                mListener.onDeleteEntry();
+            public void onDeleteEntry(RecipeResultRealmModel model) {
+                mListener.onDeleteEntry(model);
             }
 
             @Override
-            public void onClickEntry() {
-                mListener.onClickEntry();
+            public void onClickEntry(RecipeResultRealmModel model) {
+                mListener.onClickEntry(model);
             }
         });
         mRecyclerView.setAdapter(mAdapter);

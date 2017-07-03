@@ -14,7 +14,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SearchByNameActivity extends BaseNavActivity implements SearchByNameFragment.OnSearchByNameListener, ResultsFragment.OnResultSelectedListener {
+public class SearchByNameActivity extends BaseNavActivity implements SearchByNameFragment.OnSearchByNameListener {
 
     Fragment searchByNameFragment;
 
@@ -53,10 +53,5 @@ public class SearchByNameActivity extends BaseNavActivity implements SearchByNam
                 onConnectionFailed(t.toString());
             }
         });
-    }
-
-    @Override
-    public void onResultSelected(String id) {
-
     }
 }

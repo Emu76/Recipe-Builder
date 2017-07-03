@@ -17,10 +17,19 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.beachball.recipebuilder.fragment.LoadingFragment;
+import com.beachball.recipebuilder.fragment.RecipeFragment;
+import com.beachball.recipebuilder.fragment.ResultsFragment;
+import com.beachball.recipebuilder.interfaces.RecipeInterface;
+import com.beachball.recipebuilder.model.RecipeInstructions;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class BaseNavActivity extends AppCompatActivity {
+public class BaseNavActivity extends AppCompatActivity implements ResultsFragment.OnResultSelectedListener {
 
     private DrawerLayout drawerLayout;
     private ListView drawerList;
@@ -117,4 +126,23 @@ public class BaseNavActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onResultSelected(String id) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoadingFragment()).addToBackStack(LOADING_BACK_STACK).commit();
+        RecipeInterface apiService = retrofit.create(RecipeInterface.class);
+        Call<RecipeInstructions> call = apiService.getById(id, msKey);
+        call.enqueue(new Callback<RecipeInstructions>() {
+            @Override
+            public void onResponse(Call<RecipeInstructions> call, Response<RecipeInstructions> response) {
+                RecipeInstructions result = response.body();
+                RecipeFragment recipeFragment = RecipeFragment.newInstance(result);
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeFragment).addToBackStack(null).commit();
+            }
+
+            @Override
+            public void onFailure(Call<RecipeInstructions> call, Throwable t) {
+                onConnectionFailed(t.toString());
+            }
+        });
+    }
 }

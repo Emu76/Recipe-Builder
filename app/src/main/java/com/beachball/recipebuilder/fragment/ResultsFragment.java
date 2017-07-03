@@ -25,6 +25,7 @@ import com.beachball.recipebuilder.model.RecipeResultRealmModel;
 import java.util.UUID;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 
 /**
  * Created by Peter Emo on 27/06/2017.

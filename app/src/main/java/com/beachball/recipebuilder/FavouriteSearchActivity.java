@@ -9,14 +9,19 @@ import com.beachball.recipebuilder.fragment.ResultsFragment;
 import com.beachball.recipebuilder.fragment.SearchByNameFragment;
 import com.beachball.recipebuilder.interfaces.RecipeInterface;
 import com.beachball.recipebuilder.model.RecipeNameReturn;
+import com.beachball.recipebuilder.model.RecipeResult;
+import com.beachball.recipebuilder.model.RecipeResultRealmModel;
 
+import io.realm.Realm;
+import io.realm.RealmList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FavouriteSearchActivity extends BaseNavActivity implements FavouriteSearchFragment.FavouriteSearchListener {
+public class FavouriteSearchActivity extends BaseNavActivity implements FavouriteSearchFragment.FavouriteSearchListener, ResultsFragment.OnResultSelectedListener {
 
     Fragment favouriteSearchFragment;
+    Fragment resultsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +34,22 @@ public class FavouriteSearchActivity extends BaseNavActivity implements Favourit
     }
 
     @Override
-    public void onDeleteEntry() {
-
+    public void onDeleteEntry(final RecipeResultRealmModel model) {
+        Realm.init(FavouriteSearchActivity.this);
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                model.deleteFromRealm();
+            }
+        });
     }
 
     @Override
-    public void onClickEntry() {
-
+    public void onClickEntry(RecipeResultRealmModel model) {
+        RecipeResult[] resultArray = model.getResults().toArray(new RecipeResult[0]);
+        resultsFragment = ResultsFragment.newInstance(resultArray);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, resultsFragment).commit();
+        getSupportFragmentManager().executePendingTransactions();
     }
 }

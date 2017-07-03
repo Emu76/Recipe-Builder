@@ -50,24 +50,4 @@ public class SearchByIngredientActivity extends BaseNavActivity implements Searc
             }
         });
     }
-
-    @Override
-    public void onResultSelected(String id) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoadingFragment()).addToBackStack(LOADING_BACK_STACK).commit();
-        RecipeInterface apiService = retrofit.create(RecipeInterface.class);
-        Call<RecipeInstructions> call = apiService.getById(id, msKey);
-        call.enqueue(new Callback<RecipeInstructions>() {
-            @Override
-            public void onResponse(Call<RecipeInstructions> call, Response<RecipeInstructions> response) {
-                RecipeInstructions result = response.body();
-                RecipeFragment recipeFragment = RecipeFragment.newInstance(result);
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeFragment).addToBackStack(null).commit();
-            }
-
-            @Override
-            public void onFailure(Call<RecipeInstructions> call, Throwable t) {
-                onConnectionFailed(t.toString());
-            }
-        });
-    }
 }

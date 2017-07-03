@@ -59,16 +59,16 @@ public class FavouriteSearchAdapter extends RecyclerView.Adapter<FavouriteSearch
     @Override
     public void onBindViewHolder(FavouriteSearchAdapter.ViewHolder holder, final int position) {
         holder.searchText.setText(mDataset.get(position).getName());
-        holder.searchText.setOnClickListener(new View.OnClickListener() {
+        holder.searchText.getRootView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onClickEntry();
+                mListener.onClickEntry(mDataset.get(position));
             }
         });
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onDeleteEntry();
+                mListener.onDeleteEntry(mDataset.get(position));
             }
         });
     }
@@ -80,7 +80,7 @@ public class FavouriteSearchAdapter extends RecyclerView.Adapter<FavouriteSearch
 
 
     public interface FavouriteSearchAdapterListener {
-        void onDeleteEntry();
-        void onClickEntry();
+        void onDeleteEntry(RecipeResultRealmModel model);
+        void onClickEntry(RecipeResultRealmModel model);
     }
 }
