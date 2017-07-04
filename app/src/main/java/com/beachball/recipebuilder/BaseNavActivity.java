@@ -29,6 +29,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
+
 public class BaseNavActivity extends AppCompatActivity implements ResultsFragment.OnResultSelectedListener {
 
     private DrawerLayout drawerLayout;
@@ -36,8 +40,11 @@ public class BaseNavActivity extends AppCompatActivity implements ResultsFragmen
     private ActionBarDrawerToggle drawerToggle;
     Intent pendingIntent;
     public native String getNativeKey();
+    protected boolean isCancelled;
+    protected boolean isLoading;
 
-    protected static final String LOADING_BACK_STACK = "loading";
+    protected static final String LOADING_BACK_STACK = "loading_stack";
+    protected static final String MAIN_BACK_STACK = "main_stack";
     protected static final String BASE_URL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/";
     protected String msKey;
 
@@ -57,6 +64,9 @@ public class BaseNavActivity extends AppCompatActivity implements ResultsFragmen
 
         msKey = getNativeKey();
 
+        isCancelled = false;
+        isLoading = false;
+
         String[] navTitles = {getString(R.string.search_by_ingredient),getString(R.string.search_by_name),getString(R.string.favourite_searches),getString(R.string.saved_recipes)};
         int[] drawableTitles = {R.drawable.ic_action_search, R.drawable.ic_action_search, R.drawable.ic_action_favorite, R.drawable.ic_action_save};
 
@@ -73,7 +83,7 @@ public class BaseNavActivity extends AppCompatActivity implements ResultsFragmen
                 } else if(position == 2) {
                     pendingIntent = new Intent(BaseNavActivity.this, FavouriteSearchActivity.class);
                 } else if(position == 3) {
-
+                    Toast.makeText(BaseNavActivity.this, R.string.coming_soon, Toast.LENGTH_LONG).show();
                 }
                 drawerLayout.closeDrawers();
             }
@@ -81,6 +91,7 @@ public class BaseNavActivity extends AppCompatActivity implements ResultsFragmen
         drawerToggle = new ActionBarDrawerToggle(this, this.drawerLayout, R.string.app_name, R.string.app_name) {
             public void onDrawerClosed(View view) {
                 if (BaseNavActivity.this.pendingIntent != null) {
+                    pendingIntent.setFlags(FLAG_ACTIVITY_SINGLE_TOP|FLAG_ACTIVITY_CLEAR_TOP);
                     BaseNavActivity.this.startActivity(BaseNavActivity.this.pendingIntent);
                 }
             }
@@ -113,6 +124,8 @@ public class BaseNavActivity extends AppCompatActivity implements ResultsFragmen
     }
 
     protected void onConnectionFailed(String error) {
+        isLoading = false;
+        isCancelled = false;
         getSupportFragmentManager().popBackStack(LOADING_BACK_STACK, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         Toast.makeText(BaseNavActivity.this, R.string.failed_connect_string, Toast.LENGTH_LONG).show();
         Log.e("RecipeBuilder", error);
@@ -129,14 +142,20 @@ public class BaseNavActivity extends AppCompatActivity implements ResultsFragmen
     @Override
     public void onResultSelected(String id) {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoadingFragment()).addToBackStack(LOADING_BACK_STACK).commit();
+        isLoading = true;
         RecipeInterface apiService = retrofit.create(RecipeInterface.class);
         Call<RecipeInstructions> call = apiService.getById(id, msKey);
         call.enqueue(new Callback<RecipeInstructions>() {
             @Override
             public void onResponse(Call<RecipeInstructions> call, Response<RecipeInstructions> response) {
-                RecipeInstructions result = response.body();
-                RecipeFragment recipeFragment = RecipeFragment.newInstance(result);
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeFragment).addToBackStack(null).commit();
+                isLoading = false;
+                if(!isCancelled) {
+                    RecipeInstructions result = response.body();
+                    RecipeFragment recipeFragment = RecipeFragment.newInstance(result);
+                    getSupportFragmentManager().popBackStack(LOADING_BACK_STACK, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeFragment).addToBackStack(MAIN_BACK_STACK).commit();
+                }
+                isCancelled = false;
             }
 
             @Override
@@ -144,5 +163,15 @@ public class BaseNavActivity extends AppCompatActivity implements ResultsFragmen
                 onConnectionFailed(t.toString());
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        if(isLoading) {
+            isLoading = false;
+            isCancelled = true;
+        }
     }
 }

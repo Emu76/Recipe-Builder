@@ -2,6 +2,7 @@ package com.beachball.recipebuilder;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 
 import com.beachball.recipebuilder.fragment.LoadingFragment;
 import com.beachball.recipebuilder.fragment.ResultsFragment;
@@ -32,6 +33,7 @@ public class SearchByNameActivity extends BaseNavActivity implements SearchByNam
     public void onSearchByName(String ingredientStr, boolean isVegetarian, boolean isVegan) {
         hideKeyboard();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoadingFragment()).addToBackStack(LOADING_BACK_STACK).commit();
+        isLoading = true;
         RecipeInterface apiService = retrofit.create(RecipeInterface.class);
         String dietStr = (isVegetarian ? getString(R.string.vegetarian):"") + (isVegan ? getString(R.string.vegan):"");
         Call<RecipeNameReturn> call;
@@ -43,9 +45,14 @@ public class SearchByNameActivity extends BaseNavActivity implements SearchByNam
         call.enqueue(new Callback<RecipeNameReturn>() {
             @Override
             public void onResponse(Call<RecipeNameReturn> call, Response<RecipeNameReturn> response) {
-                RecipeNameReturn result = response.body();
-                ResultsFragment resultsFragment = ResultsFragment.newInstance(result);
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, resultsFragment).commit();
+                isLoading = false;
+                if(!isCancelled) {
+                    RecipeNameReturn result = response.body();
+                    ResultsFragment resultsFragment = ResultsFragment.newInstance(result);
+                    getSupportFragmentManager().popBackStack(LOADING_BACK_STACK, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, resultsFragment).addToBackStack(MAIN_BACK_STACK).commit();
+                }
+                isCancelled = false;
             }
 
             @Override

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.beachball.recipebuilder.FavouriteSearchAdapter;
 import com.beachball.recipebuilder.R;
@@ -22,6 +23,7 @@ public class FavouriteSearchFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private FavouriteSearchAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
+    private TextView noFavouritesView;
 
     public FavouriteSearchFragment() {
     }
@@ -35,6 +37,7 @@ public class FavouriteSearchFragment extends Fragment {
         Realm realm = Realm.getDefaultInstance();
         RealmResults<RecipeResultRealmModel> list = realm.where(RecipeResultRealmModel.class).findAll();
 
+        noFavouritesView = (TextView) fragmentView.findViewById(R.id.no_favourites_text);
         mRecyclerView = (RecyclerView) fragmentView.findViewById(R.id.favourite_searches_list);
         setupRecyclerView(list);
 
@@ -63,6 +66,12 @@ public class FavouriteSearchFragment extends Fragment {
         void onClickEntry(RecipeResultRealmModel model);
     }
 
+    public void notifyAdapter() {
+        if(mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
     private void setupRecyclerView(RealmResults<RecipeResultRealmModel> list) {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -70,6 +79,9 @@ public class FavouriteSearchFragment extends Fragment {
             @Override
             public void onDeleteEntry(RecipeResultRealmModel model) {
                 mListener.onDeleteEntry(model);
+                if(mAdapter.getItemCount() == 0) {
+                    noFavouritesView.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -77,6 +89,9 @@ public class FavouriteSearchFragment extends Fragment {
                 mListener.onClickEntry(model);
             }
         });
+        if(mAdapter.getItemCount() == 0) {
+            noFavouritesView.setVisibility(View.VISIBLE);
+        }
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
     }

@@ -69,6 +69,7 @@ public class FavouriteSearchAdapter extends RecyclerView.Adapter<FavouriteSearch
             @Override
             public void onClick(View v) {
                 mListener.onDeleteEntry(mDataset.get(position));
+                notifyDataSetChanged();
             }
         });
     }

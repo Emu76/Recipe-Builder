@@ -165,6 +165,7 @@ public class ResultsFragment extends Fragment {
                 String searchNameStr = searchName.getText().toString();
                 dialog.dismiss();
                 saveToRealm(results, searchNameStr);
+                Toast.makeText(getContext(), R.string.search_favourited, Toast.LENGTH_LONG).show();
                 searchSaved = true;
             }
         });

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RecipeBuilder</string>
+    <string name="app_name">Recipe Builder</string>
     <string name="action_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -31,6 +31,9 @@
     <string name="ready_in">Ready in:</string>
     <string name="minutes">minutes</string>
     <string name="search_already_saved">Search has already been favourited!</string>
+    <string name="coming_soon">Coming soon</string>
+    <string name="search_favourited">Search favourited!</string>
+    <string name="no_favourites">No favourites</string>
 
     <string name="like_single">like</string>
     <string name="like_multiple">likes</string>

@@ -4,19 +4,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.beachball.recipebuilder.fragment.FavouriteSearchFragment;
-import com.beachball.recipebuilder.fragment.LoadingFragment;
 import com.beachball.recipebuilder.fragment.ResultsFragment;
-import com.beachball.recipebuilder.fragment.SearchByNameFragment;
-import com.beachball.recipebuilder.interfaces.RecipeInterface;
-import com.beachball.recipebuilder.model.RecipeNameReturn;
 import com.beachball.recipebuilder.model.RecipeResult;
 import com.beachball.recipebuilder.model.RecipeResultRealmModel;
 
 import io.realm.Realm;
-import io.realm.RealmList;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class FavouriteSearchActivity extends BaseNavActivity implements FavouriteSearchFragment.FavouriteSearchListener, ResultsFragment.OnResultSelectedListener {
 
@@ -51,5 +43,13 @@ public class FavouriteSearchActivity extends BaseNavActivity implements Favourit
         resultsFragment = ResultsFragment.newInstance(resultArray);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, resultsFragment).commit();
         getSupportFragmentManager().executePendingTransactions();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(favouriteSearchFragment != null) {
+            ((FavouriteSearchFragment)favouriteSearchFragment).notifyAdapter();
+        }
     }
 }

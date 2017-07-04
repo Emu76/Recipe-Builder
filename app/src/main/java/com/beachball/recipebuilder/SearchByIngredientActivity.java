@@ -2,6 +2,7 @@ package com.beachball.recipebuilder;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 
 import com.beachball.recipebuilder.fragment.LoadingFragment;
 import com.beachball.recipebuilder.fragment.RecipeFragment;
@@ -34,14 +35,20 @@ public class SearchByIngredientActivity extends BaseNavActivity implements Searc
     public void onIngredientEntered(String ingredientStr) {
         hideKeyboard();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoadingFragment()).addToBackStack(LOADING_BACK_STACK).commit();
+        isLoading = true;
         RecipeInterface apiService = retrofit.create(RecipeInterface.class);
         Call<RecipeResult[]> call = apiService.getByIngredients(msKey, ingredientStr, 10, 1);
         call.enqueue(new Callback<RecipeResult[]>() {
             @Override
             public void onResponse(Call<RecipeResult[]> call, Response<RecipeResult[]> response) {
-                RecipeResult[] result = response.body();
-                ResultsFragment resultsFragment = ResultsFragment.newInstance(result);
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, resultsFragment).commit();
+                isLoading = false;
+                if(!isCancelled) {
+                    RecipeResult[] result = response.body();
+                    ResultsFragment resultsFragment = ResultsFragment.newInstance(result);
+                    getSupportFragmentManager().popBackStack(LOADING_BACK_STACK, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, resultsFragment).addToBackStack(MAIN_BACK_STACK).commit();
+                }
+                isCancelled = false;
             }
 
             @Override
